@@ -68,3 +68,32 @@ WHERE c.first_name = 'Jill' OR
 ORDER BY c.id;
 
 ---------------------------------------------------------------------------------------------------------------------------
+
+https://platform.stratascratch.com/coding/9917-average-salaries?code_type=1
+
+WITH average_salaries AS (
+    SELECT department, 
+           AVG(salary) AS avg_salary
+    FROM employee
+    GROUP BY department
+)
+
+SELECT e.department, 
+       e.first_name, 
+       e.salary, 
+       a.avg_salary  
+FROM employee AS e
+INNER JOIN average_salaries AS a ON e.department = a.department
+ORDER BY department;
+
+---------------------------------------------------------------------------------------------------------------------------
+
+https://platform.stratascratch.com/coding/9924-find-libraries-who-havent-provided-the-email-address-in-2016-but-their-notice-preference-definition-is-set-to-email?code_type=1
+
+SELECT DISTINCT home_library_code 
+FROM library_usage
+WHERE circulation_active_year = 2016 AND
+      notice_preference_definition = 'email' AND
+      provided_email_address = 'FALSE';
+
+---------------------------------------------------------------------------------------------------------------------------
