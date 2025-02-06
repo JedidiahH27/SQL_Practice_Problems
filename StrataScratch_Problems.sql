@@ -97,3 +97,21 @@ WHERE circulation_active_year = 2016 AND
       provided_email_address = 'FALSE';
 
 ---------------------------------------------------------------------------------------------------------------------------
+
+https://platform.stratascratch.com/coding/9972-find-the-base-pay-for-police-captains?code_type=1
+
+SELECT employeename, 
+       basepay 
+FROM sf_public_salaries
+WHERE jobtitle = 'CAPTAIN III (POLICE DEPARTMENT)';
+
+---------------------------------------------------------------------------------------------------------------------------
+
+https://platform.stratascratch.com/coding/9992-find-artists-that-have-been-on-spotify-the-most-number-of-times?code_type=1
+
+SELECT artist, COUNT(*) AS n_occurences
+FROM spotify_worldwide_daily_song_ranking
+GROUP BY artist
+ORDER BY n_occurences DESC;
+
+---------------------------------------------------------------------------------------------------------------------------
