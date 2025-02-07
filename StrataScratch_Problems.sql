@@ -116,3 +116,21 @@ GROUP BY artist
 ORDER BY n_occurences DESC;
 
 ---------------------------------------------------------------------------------------------------------------------------
+
+https://platform.stratascratch.com/coding/10003-lyft-driver-wages?code_type=1
+
+SELECT * 
+FROM lyft_drivers
+WHERE yearly_salary <= 30000 OR yearly_salary >= 70000;
+
+---------------------------------------------------------------------------------------------------------------------------
+
+https://platform.stratascratch.com/coding/10061-popularity-of-hack?code_type=1
+
+SELECT e.location, 
+       AVG(fhs.popularity) AS avg_popularity 
+FROM facebook_employees AS e
+INNER JOIN facebook_hack_survey AS fhs ON e.id = fhs.employee_id
+GROUP BY e.location;
+
+---------------------------------------------------------------------------------------------------------------------------
