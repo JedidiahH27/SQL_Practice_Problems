@@ -134,3 +134,30 @@ INNER JOIN facebook_hack_survey AS fhs ON e.id = fhs.employee_id
 GROUP BY e.location;
 
 ---------------------------------------------------------------------------------------------------------------------------
+
+https://platform.stratascratch.com/coding/10087-find-all-posts-which-were-reacted-to-with-a-heart?code_type=1
+
+SELECT DISTINCT post_id, 
+       poster, 
+       post_text,
+       post_keywords,
+       post_date
+FROM (SELECT fp.post_id, 
+        fp.poster, 
+        fp.post_text,
+        fp.post_keywords,
+        fp.post_date,
+        fr.reaction
+      FROM facebook_posts AS fp
+      INNER JOIN facebook_reactions AS fr ON fr.post_id = fp.post_id) AS sub
+WHERE reaction = 'heart'
+
+---------------------------------------------------------------------------------------------------------------------------
+
+https://platform.stratascratch.com/coding/10128-count-the-number-of-movies-that-abigail-breslin-nominated-for-oscar?code_type=1
+
+SELECT COUNT(*) AS n_movies_by_abi
+FROM oscar_nominees
+WHERE nominee = 'Abigail Breslin';
+
+---------------------------------------------------------------------------------------------------------------------------
