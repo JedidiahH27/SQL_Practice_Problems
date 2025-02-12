@@ -183,3 +183,37 @@ ORDER BY MAX(end_time) DESC;
 
 ---------------------------------------------------------------------------------------------------------------------------
 
+https://platform.stratascratch.com/coding/10299-finding-updated-records?code_type=1
+
+SELECT id, 
+       first_name, 
+       last_name,
+       department_id,
+       MAX(salary)
+FROM ms_employee_salary
+GROUP BY 1, 2, 3, 4
+ORDER BY id;
+
+---------------------------------------------------------------------------------------------------------------------------
+
+https://platform.stratascratch.com/coding/10308-salaries-differences?code_type=1
+
+WITH cte AS (SELECT db_dept.department, 
+             MAX(salary) AS max_salary 
+FROM db_employee
+LEFT JOIN db_dept ON db_employee.department_id = db_dept.id
+GROUP BY db_dept.department
+HAVING db_dept.department = 'marketing' OR
+       db_dept.department = 'engineering')
+       
+SELECT ABS(
+(SELECT max_salary 
+ FROM cte
+ WHERE department = 'engineering') - 
+(SELECT max_salary 
+ FROM cte
+ WHERE department = 'marketing')
+) AS salary_difference;
+
+---------------------------------------------------------------------------------------------------------------------------
+
