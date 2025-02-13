@@ -282,7 +282,8 @@ LIMIT 1;
 
 https://platform.stratascratch.com/coding/2102-flags-per-video?code_type=1
 
-SELECT uf.video_id, COUNT(DISTINCT name) AS num_unique_users
+SELECT uf.video_id, 
+       COUNT(DISTINCT name) AS num_unique_users
 FROM (SELECT CONCAT(user_firstname, ' ', user_lastname) AS name, video_id 
       FROM user_flags 
       WHERE flag_id IS NOT NULL) AS uf
