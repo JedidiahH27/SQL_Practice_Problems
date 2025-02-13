@@ -1,3 +1,5 @@
+# EASY
+
 ---------------------------------------------------------------------------------------------------------------------------
 https://platform.stratascratch.com/coding/9728-inspections-that-resulted-in-violations?code_type=1
 
