@@ -257,3 +257,35 @@ ORDER BY entry_date
 LIMIT 7;
 
 ---------------------------------------------------------------------------------------------------------------------------
+
+https://platform.stratascratch.com/coding/2099-election-results?code_type=1
+
+WITH cte_vote_count AS (SELECT voter, 
+                               COUNT(*) AS vote_number
+                        FROM voting_results
+                        GROUP BY voter),
+
+cte_total_info AS (SELECT vr.candidate, 
+                          vr.voter, 
+                          cte.vote_number
+                   FROM voting_results AS vr
+                   INNER JOIN cte_vote_count AS cte ON cte.voter = vr.voter)
+
+SELECT candidate
+FROM cte_total_info
+WHERE candidate IS NOT NULL
+GROUP BY candidate
+ORDER BY ROUND(SUM(1.0 / vote_number), 3) DESC
+LIMIT 1;
+
+---------------------------------------------------------------------------------------------------------------------------
+
+https://platform.stratascratch.com/coding/2102-flags-per-video?code_type=1
+
+SELECT uf.video_id, COUNT(DISTINCT name) AS num_unique_users
+FROM (SELECT CONCAT(user_firstname, ' ', user_lastname) AS name, video_id 
+      FROM user_flags 
+      WHERE flag_id IS NOT NULL) AS uf
+GROUP BY uf.video_id
+
+---------------------------------------------------------------------------------------------------------------------------
