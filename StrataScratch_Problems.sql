@@ -1,4 +1,4 @@
-# EASY
+EASY
 
 ---------------------------------------------------------------------------------------------------------------------------
 https://platform.stratascratch.com/coding/9728-inspections-that-resulted-in-violations?code_type=1
@@ -219,3 +219,41 @@ SELECT ABS(
 
 ---------------------------------------------------------------------------------------------------------------------------
 
+MEDIUM
+
+---------------------------------------------------------------------------------------------------------------------------
+
+https://platform.stratascratch.com/coding/2005-share-of-active-users?code_type=1
+
+SELECT 1.0*SUM(CASE WHEN status = 'open' THEN 1 ELSE 0 END) /  
+       COUNT(*) AS active_users_share
+FROM fb_active_users
+WHERE country = 'USA';
+
+---------------------------------------------------------------------------------------------------------------------------
+
+https://platform.stratascratch.com/coding/2097-premium-acounts?code_type=1
+
+WITH cte_no_free AS (SELECT * 
+                     FROM premium_accounts_by_day
+                     WHERE final_price != 0), 
+
+cte_dates AS (SELECT pa_1.account_id, 
+                          pa_1.entry_date,
+                          pa_1.final_price AS final_price_1,
+                          pa_2.final_price AS final_price_2,
+                          pa_2.entry_date AS seven_day 
+FROM cte_no_free AS pa_1
+LEFT JOIN cte_no_free AS pa_2 
+ON pa_1.account_id = pa_2.account_id
+AND (pa_1.entry_date + INTERVAL '7 days') = pa_2.entry_date)
+
+SELECT entry_date, 
+       SUM(CASE WHEN entry_date IS NOT NULL THEN 1 ELSE 0 END) AS premium_paid_accounts,
+       SUM(CASE WHEN seven_day IS NOT NULL THEN 1 ELSE 0 END) AS premium_paid_accounts_after_7d
+FROM cte_dates
+GROUP BY entry_date
+ORDER BY entry_date
+LIMIT 7;
+
+---------------------------------------------------------------------------------------------------------------------------
