@@ -290,3 +290,46 @@ FROM (SELECT CONCAT(user_firstname, ' ', user_lastname) AS name, video_id
 GROUP BY uf.video_id
 
 ---------------------------------------------------------------------------------------------------------------------------
+
+https://platform.stratascratch.com/coding/2104-user-with-most-approved-flags?code_type=1
+
+WITH name_and_reviewed_outcome AS (SELECT CONCAT(uf.user_firstname, ' ', uf.user_lastname) AS name,
+                                          fr.reviewed_outcome,
+                                          uf.video_id
+                                   FROM user_flags AS uf
+                                   INNER JOIN flag_review AS fr ON fr.flag_id = uf.flag_id AND fr.reviewed_outcome = 'APPROVED'),
+
+name_and_counts AS (SELECT name AS username, 
+                           COUNT(DISTINCT video_id)
+                    FROM name_and_reviewed_outcome
+                    GROUP BY name)
+
+SELECT username
+FROM name_and_counts
+WHERE count = (SELECT MAX(count) FROM name_and_counts);
+
+---------------------------------------------------------------------------------------------------------------------------
+
+https://platform.stratascratch.com/coding/9610-find-students-with-a-median-writing-score?code_type=1
+
+WITH cte AS (SELECT student_id,
+                    sat_writing,
+                    ROW_NUMBER() OVER(ORDER BY sat_writing)
+             FROM sat_scores
+             ORDER BY sat_writing),
+
+cte_1 AS (SELECT *, 1.0*(SELECT MAX(row_number) FROM cte) / 2 - row_number AS difference 
+          FROM cte),
+
+
+cte_2 AS (SELECT student_id, 
+                 sat_writing 
+          FROM cte_1 
+          WHERE difference = -0.5)
+
+SELECT cte.student_id
+FROM cte
+INNER JOIN cte_2 ON cte_2.sat_writing = cte.sat_writing
+ORDER BY student_id
+
+---------------------------------------------------------------------------------------------------------------------------
