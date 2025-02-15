@@ -333,3 +333,27 @@ INNER JOIN cte_2 ON cte_2.sat_writing = cte.sat_writing
 ORDER BY student_id
 
 ---------------------------------------------------------------------------------------------------------------------------
+
+https://platform.stratascratch.com/coding/9650-find-the-top-10-ranked-songs-in-2010?code_type=1
+
+SELECT year_rank, 
+       group_name, 
+       song_name 
+FROM billboard_top_100_year_end
+WHERE year = 2010 and year_rank <= 10
+GROUP BY 1, 2, 3
+ORDER BY year_rank;
+
+---------------------------------------------------------------------------------------------------------------------------
+
+https://platform.stratascratch.com/coding/9726-classify-business-type?code_type=1
+
+SELECT DISTINCT business_name, 
+       CASE WHEN business_name ILIKE '%restaurant%' THEN 'restaurant'
+            WHEN business_name ILIKE '%cafe%' OR business_name ILIKE '%café%' OR business_name ILIKE '%coffee%' THEN 'cafe' 
+            WHEN business_name ILIKE '%school%' THEN 'school'
+            ELSE 'other'
+            END AS business_type
+FROM sf_restaurant_health_violations;
+
+---------------------------------------------------------------------------------------------------------------------------
