@@ -357,3 +357,28 @@ SELECT DISTINCT business_name,
 FROM sf_restaurant_health_violations;
 
 ---------------------------------------------------------------------------------------------------------------------------
+
+https://platform.stratascratch.com/coding/10077-income-by-title-and-gender?code_type=1
+
+WITH cte AS (SELECT SUM(bonus) AS total_bonus,
+                    worker_ref_id
+            FROM sf_bonus
+            GROUP BY worker_ref_id)
+
+SELECT sfe.employee_title, 
+       sfe.sex, 
+       AVG(sfe.salary + cte.total_bonus) AS avg_compensation
+FROM sf_employee AS sfe
+RIGHT JOIN cte ON sfe.id = cte.worker_ref_id
+GROUP BY 1, 2
+
+---------------------------------------------------------------------------------------------------------------------------
+
+https://platform.stratascratch.com/coding/9781-find-the-rate-of-processed-tickets-for-each-type?code_type=1
+
+SELECT type, 
+       ROUND(1.0*SUM(CASE WHEN processed = 'TRUE' THEN 1 ELSE 0 END) / COUNT(*), 2) AS processed_rate
+FROM facebook_complaints
+GROUP BY type;
+
+---------------------------------------------------------------------------------------------------------------------------
