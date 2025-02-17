@@ -382,3 +382,25 @@ FROM facebook_complaints
 GROUP BY type;
 
 ---------------------------------------------------------------------------------------------------------------------------
+
+https://platform.stratascratch.com/coding/9782-customer-revenue-in-march?code_type=1
+
+SELECT cust_id,
+       SUM(total_order_cost) AS total_revenue
+FROM orders
+WHERE EXTRACT(YEAR FROM order_date) = 2019 AND EXTRACT(MONTH FROM order_date) = 3
+GROUP BY cust_id
+ORDER BY 2 DESC;
+
+---------------------------------------------------------------------------------------------------------------------------
+
+https://platform.stratascratch.com/coding/9817-find-the-number-of-times-each-word-appears-in-drafts?code_type=1
+
+SELECT LOWER(words) AS word, 
+       COUNT(*) AS occurrences
+FROM (SELECT REGEXP_SPLIT_TO_TABLE(REGEXP_REPLACE(contents, '[^\w\s]', '', 'g'), '\s+') AS words 
+      FROM google_file_store) AS the_words
+GROUP BY LOWER(words)
+ORDER BY occurences DESC;
+
+---------------------------------------------------------------------------------------------------------------------------
