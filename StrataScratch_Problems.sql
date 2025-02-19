@@ -404,3 +404,47 @@ GROUP BY LOWER(words)
 ORDER BY occurences DESC;
 
 ---------------------------------------------------------------------------------------------------------------------------
+
+https://platform.stratascratch.com/coding/9881-make-a-report-showing-the-number-of-survivors-and-non-survivors-by-passenger-class?code_type=1
+
+WITH cte_first_class AS (SELECT survived, 
+                                COUNT(*) AS first_class
+                                FROM titanic
+                                WHERE pclass = 1
+                                GROUP BY survived, pclass
+                                ORDER BY survived),
+                                
+cte_second_class AS (SELECT survived, 
+                            COUNT(*) AS second_class
+                            FROM titanic
+                            WHERE pclass = 2
+                            GROUP BY survived, pclass
+                            ORDER BY survived),
+                            
+cte_third_class AS (SELECT survived, 
+                           COUNT(*) AS third_class
+                           FROM titanic
+                           WHERE pclass = 3
+                           GROUP BY survived, pclass
+                           ORDER BY survived)
+                           
+SELECT uno.survived, 
+       uno.first_class, 
+       dos.second_class, 
+       tres.third_class
+FROM cte_first_class AS uno
+INNER JOIN cte_second_class AS dos ON uno.survived = dos.survived
+INNER JOIN cte_third_class AS tres ON uno.survived = tres.survived
+
+---------------------------------------------------------------------------------------------------------------------------
+
+https://platform.stratascratch.com/coding/9892-second-highest-salary?code_type=1
+
+SELECT salary FROM (SELECT salary 
+                    FROM employee
+                    ORDER BY salary DESC
+                    LIMIT 2) AS top_two
+ORDER BY salary ASC
+LIMIT 1;
+
+---------------------------------------------------------------------------------------------------------------------------
