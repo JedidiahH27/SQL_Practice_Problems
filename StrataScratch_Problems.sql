@@ -473,3 +473,24 @@ FROM employee AS e
 INNER JOIN cte_max_salary AS cte ON cte.max_salary = e.salary;
 
 ---------------------------------------------------------------------------------------------------------------------------
+
+https://platform.stratascratch.com/coding/9905-highest-target-under-manager?code_type=1
+
+SELECT first_name,
+       target
+FROM salesforce_employees
+WHERE manager_id = 13 AND 
+       target  = (SELECT MAX(target) FROM salesforce_employees WHERE manager_id = 13);
+
+---------------------------------------------------------------------------------------------------------------------------
+
+https://platform.stratascratch.com/coding/9909-highest-number-of-orders?code_type=1
+
+SELECT cust_id, 
+       COUNT(*) AS total_orders
+FROM orders
+GROUP BY cust_id
+ORDER BY total_orders DESC
+LIMIT 1;
+
+---------------------------------------------------------------------------------------------------------------------------
