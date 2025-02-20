@@ -448,3 +448,28 @@ ORDER BY salary ASC
 LIMIT 1;
 
 ---------------------------------------------------------------------------------------------------------------------------
+
+https://platform.stratascratch.com/coding/9894-employee-and-manager-salaries?code_type=1
+
+SELECT e.first_name, 
+       e.salary 
+FROM employee AS e
+INNER JOIN employee AS ee ON ee.id = e.manager_id
+WHERE e.salary > ee.salary;
+
+---------------------------------------------------------------------------------------------------------------------------
+
+https://platform.stratascratch.com/coding/9897-highest-salary-in-department?code_type=1
+
+WITH cte_max_salary AS (SELECT department, 
+                               MAX(salary) AS max_salary
+                        FROM employee
+                        GROUP BY 1)
+
+SELECT cte.department, 
+       e.first_name, 
+       cte.max_salary
+FROM employee AS e
+INNER JOIN cte_max_salary AS cte ON cte.max_salary = e.salary;
+
+---------------------------------------------------------------------------------------------------------------------------
