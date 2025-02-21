@@ -494,3 +494,33 @@ ORDER BY total_orders DESC
 LIMIT 1;
 
 ---------------------------------------------------------------------------------------------------------------------------
+
+https://platform.stratascratch.com/coding/9915-highest-cost-orders?code_type=1
+
+WITH cte AS (SELECT c.first_name, 
+                    o.order_date, 
+                    o.total_order_cost 
+FROM customers AS c
+INNER JOIN orders AS o ON o.cust_id = c.id AND 
+                          o.order_date BETWEEN '2019-02-01' AND '2019-05-01')
+
+SELECT first_name, 
+       SUM(total_order_cost), 
+       order_date
+FROM cte
+GROUP BY first_name, order_date
+ORDER BY 2 DESC
+LIMIT 1;
+
+---------------------------------------------------------------------------------------------------------------------------
+
+https://platform.stratascratch.com/coding/9942-largest-olympics?code_type=1
+
+SELECT games, 
+       COUNT(DISTINCT id) 
+FROM olympics_athletes_events
+GROUP BY games
+ORDER BY 2 DESC
+LIMIT 1;
+
+---------------------------------------------------------------------------------------------------------------------------
