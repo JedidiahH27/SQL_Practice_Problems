@@ -524,3 +524,22 @@ ORDER BY 2 DESC
 LIMIT 1;
 
 ---------------------------------------------------------------------------------------------------------------------------
+
+https://platform.stratascratch.com/coding/9991-top-ranked-songs?code_type=1
+
+SELECT trackname, 
+       COUNT(*) AS time_top1
+FROM spotify_worldwide_daily_song_ranking
+WHERE position = 1
+GROUP BY trackname
+ORDER BY 2 DESC;
+
+---------------------------------------------------------------------------------------------------------------------------
+
+https://platform.stratascratch.com/coding/10026-find-all-wineries-which-produce-wines-by-possessing-aromas-of-plum-cherry-rose-or-hazelnut?code_type=1
+
+SELECT DISTINCT winery
+FROM winemag_p1
+WHERE lower(description) ~ '\y(plum|cherry|rose|hazelnut)\y'
+
+---------------------------------------------------------------------------------------------------------------------------
