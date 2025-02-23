@@ -543,3 +543,26 @@ FROM winemag_p1
 WHERE lower(description) ~ '\y(plum|cherry|rose|hazelnut)\y'
 
 ---------------------------------------------------------------------------------------------------------------------------
+
+https://platform.stratascratch.com/coding/10048-top-businesses-with-most-reviews?code_type=1
+
+SELECT name, 
+       review_count 
+FROM yelp_business
+ORDER BY review_count DESC
+LIMIT 5;
+
+---------------------------------------------------------------------------------------------------------------------------
+
+https://platform.stratascratch.com/coding/10049-reviews-of-categories?code_type=1
+
+SELECT category, SUM(review_count) AS total_reviews
+FROM (
+    SELECT unnest(string_to_array(categories, ';')) AS category,
+           review_count
+    FROM yelp_business
+) AS category_split
+GROUP BY category
+ORDER BY total_reviews DESC
+
+---------------------------------------------------------------------------------------------------------------------------
