@@ -566,3 +566,39 @@ GROUP BY category
 ORDER BY total_reviews DESC
 
 ---------------------------------------------------------------------------------------------------------------------------
+
+https://platform.stratascratch.com/coding/10060-top-cool-votes?code_type=1
+
+WITH cte AS (SELECT business_name, 
+                    review_text, 
+                    SUM(cool) AS cool_sum
+             FROM yelp_reviews
+             GROUP BY business_name, review_text)
+
+SELECT business_name, review_text 
+FROM cte
+WHERE cool_sum = (SELECT MAX(cool_sum) 
+                  FROM cte);
+
+---------------------------------------------------------------------------------------------------------------------------
+
+https://platform.stratascratch.com/coding/10064-highest-energy-consumption?code_type=1
+
+WITH cte AS (SELECT * FROM fb_eu_energy
+             UNION
+             SELECT * FROM fb_asia_energy
+             UNION 
+             SELECT * FROM fb_na_energy),
+
+cte_1 AS (SELECT date, 
+                 SUM(consumption) AS total_energy_consumption
+          FROM cte
+          GROUP BY date
+          ORDER BY total_energy_consumption DESC)
+
+SELECT date, 
+       total_energy_consumption
+FROM cte_1
+WHERE total_energy_consumption = (SELECT MAX(total_energy_consumption) FROM cte_1);
+
+---------------------------------------------------------------------------------------------------------------------------
