@@ -602,3 +602,30 @@ FROM cte_1
 WHERE total_energy_consumption = (SELECT MAX(total_energy_consumption) FROM cte_1);
 
 ---------------------------------------------------------------------------------------------------------------------------
+
+https://platform.stratascratch.com/coding/10078-find-matching-hosts-and-guests-in-a-way-that-they-are-both-of-the-same-gender-and-nationality?code_type=1
+
+WITH cte AS (SELECT h.host_id, 
+                    g.guest_id
+             FROM airbnb_hosts AS h
+             FULL OUTER JOIN airbnb_guests AS g ON h.nationality = g.nationality AND h.gender = g.gender)
+
+SELECT DISTINCT host_id, guest_id
+FROM cte
+
+---------------------------------------------------------------------------------------------------------------------------
+
+https://platform.stratascratch.com/coding/10090-find-the-percentage-of-shipable-orders?code_type=1
+
+WITH cte AS (SELECT o.cust_id, 
+                    c.address 
+             FROM orders AS o
+             LEFT JOIN customers AS c ON c.id = o.cust_id)
+             
+SELECT ROUND(
+             1.0 * COUNT(*) / (SELECT COUNT(*) FROM cte), 
+            2) * 100 AS shippable_percentage
+FROM cte
+WHERE address IS NOT NULL;
+
+---------------------------------------------------------------------------------------------------------------------------
