@@ -629,3 +629,31 @@ FROM cte
 WHERE address IS NOT NULL;
 
 ---------------------------------------------------------------------------------------------------------------------------
+
+https://platform.stratascratch.com/coding/10134-spam-posts?code_type=1
+
+WITH cte AS (SELECT fp.post_id, fp.post_keywords, fp.post_date  
+             FROM facebook_posts AS fp
+             INNER JOIN facebook_post_views AS fpv ON fp.post_id = fpv.post_id)
+
+SELECT post_date, 
+       ROUND(100.0*SUM(CASE WHEN post_keywords LIKE '%spam%' THEN 1 ELSE 0 END) / COUNT(post_id)) AS spam_share
+FROM cte
+GROUP BY post_date;
+
+---------------------------------------------------------------------------------------------------------------------------
+
+https://platform.stratascratch.com/coding/10141-apple-product-counts?code_type=1
+
+WITH cte AS (SELECT DISTINCT pe.user_id, pe.device, pe.event_type, pu.language
+             FROM playbook_events AS pe
+             INNER JOIN playbook_users AS pu ON pe.user_id = pu.user_id)
+             
+SELECT language, 
+       SUM(CASE WHEN (device = 'macbook pro' OR device = 'iphone 5s' OR device = 'ipad air') AND event_type = 'engagement' THEN 1 ELSE 0 END) AS n_apple_users, 
+       COUNT(DISTINCT user_id) AS n_total_users 
+FROM cte
+GROUP BY language
+ORDER BY n_total_users DESC;
+
+---------------------------------------------------------------------------------------------------------------------------
