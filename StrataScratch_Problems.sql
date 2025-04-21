@@ -657,3 +657,33 @@ GROUP BY language
 ORDER BY n_total_users DESC;
 
 ---------------------------------------------------------------------------------------------------------------------------
+
+https://platform.stratascratch.com/coding/10142-no-order-customers?code_type=1
+
+WITH cte AS (SELECT c.first_name
+             FROM customers AS c
+             LEFT JOIN orders AS o ON o.cust_id = c.id
+             AND o.order_date NOT BETWEEN '2019-02-01' AND '2019-03-01'),
+
+cte_2 AS (SELECT c.first_name
+             FROM customers AS c
+             INNER JOIN orders AS o ON o.cust_id = c.id
+             AND o.order_date BETWEEN '2019-02-01' AND '2019-03-01')
+             
+SELECT DISTINCT cte.first_name
+FROM cte
+LEFT JOIN cte_2 ON cte.first_name = cte_2.first_name
+WHERE cte_2.first_name IS NULL;
+
+---------------------------------------------------------------------------------------------------------------------------
+
+https://platform.stratascratch.com/coding/10156-number-of-units-per-nationality?code_type=1
+
+SELECT ah.nationality, 
+       COUNT(DISTINCT au.unit_id) AS apartment_count
+FROM airbnb_hosts AS ah
+INNER JOIN airbnb_units AS au ON ah.host_id = au.host_id
+           AND ah.age < 30 AND au.unit_type = 'Apartment'
+GROUP BY ah.nationality;
+
+---------------------------------------------------------------------------------------------------------------------------
