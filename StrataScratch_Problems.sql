@@ -687,3 +687,32 @@ INNER JOIN airbnb_units AS au ON ah.host_id = au.host_id
 GROUP BY ah.nationality;
 
 ---------------------------------------------------------------------------------------------------------------------------
+
+https://platform.stratascratch.com/coding/10159-ranking-most-active-guests?code_type=1
+
+WITH cte AS (SELECT id_guest, 
+                    SUM(n_messages) AS sum_n_messages
+             FROM airbnb_contacts
+             GROUP BY id_guest
+             ORDER BY sum_n_messages DESC)
+
+SELECT DENSE_RANK() OVER(ORDER BY sum_n_messages DESC) AS ranking, 
+       id_guest,
+       sum_n_messages
+FROM cte
+ORDER BY ranking ASC;
+
+---------------------------------------------------------------------------------------------------------------------------
+
+https://platform.stratascratch.com/coding/10182-number-of-streets-per-zip-code?code_type=1
+
+SELECT business_postal_code, 
+       COUNT(DISTINCT CASE WHEN LEFT(business_address, 1) ~ '^[0-9]' THEN LOWER(SPLIT_PART(business_address, ' ', 2))
+                           ELSE LOWER(SPLIT_PART(business_address, ' ', 1)) END) AS n_streets 
+FROM sf_restaurant_health_violations
+WHERE business_postal_code IS NOT NULL
+GROUP BY business_postal_code
+ORDER BY n_streets DESC, business_postal_code ASC;
+
+---------------------------------------------------------------------------------------------------------------------------
+
