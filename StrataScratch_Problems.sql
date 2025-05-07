@@ -716,3 +716,24 @@ ORDER BY n_streets DESC, business_postal_code ASC;
 
 ---------------------------------------------------------------------------------------------------------------------------
 
+https://platform.stratascratch.com/coding/10285-acceptance-rate-by-date?code_type=1
+
+WITH cte AS (SELECT f1.user_id_receiver, f1.user_id_sender, f1.date, f2.action
+             FROM fb_friend_requests AS f1
+             INNER JOIN fb_friend_requests AS f2 ON f1.action = 'sent' AND f2.action = 'accepted' AND f1.user_id_sender = f2.user_id_sender AND f2.user_id_receiver = f1.user_id_receiver),
+             
+     cte_2 AS (SELECT date, COUNT(*) AS total_requests_sent
+              FROM fb_friend_requests
+              WHERE action = 'sent'
+              GROUP BY date),
+              
+     cte_3 AS (SELECT date, COUNT(*) AS total_requests_accepted
+              FROM cte
+              GROUP BY date)
+              
+SELECT cte_2.date, 1.0*cte_3.total_requests_accepted / cte_2.total_requests_sent AS percentage_acceptance
+FROM cte_2
+INNER JOIN cte_3 ON cte_2.date = cte_3.date
+
+---------------------------------------------------------------------------------------------------------------------------
+
