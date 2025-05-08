@@ -737,3 +737,21 @@ INNER JOIN cte_3 ON cte_2.date = cte_3.date
 
 ---------------------------------------------------------------------------------------------------------------------------
 
+https://platform.stratascratch.com/coding/10288-clicked-vs-non-clicked-search-results?code_type=1
+
+WITH cte AS (SELECT COUNT(*) AS total_count FROM fb_search_events),
+
+     cte_2 AS (SELECT COUNT(*) AS top_3_clicked
+               FROM fb_search_events
+               WHERE search_results_position <= 3 AND clicked = 1),
+               
+     cte_3 AS (SELECT COUNT(*) AS top_3_notclicked
+               FROM fb_search_events
+               WHERE search_results_position <= 3 AND clicked = 0)
+               
+SELECT 100.0*(SELECT top_3_clicked FROM cte_2) / (SELECT total_count FROM cte) AS top_3_clicked,
+       100.0*(SELECT top_3_notclicked FROM cte_3) / (SELECT total_count FROM cte) AS top_3_notclicked;
+
+---------------------------------------------------------------------------------------------------------------------------
+
+
