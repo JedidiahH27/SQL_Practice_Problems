@@ -778,3 +778,26 @@ HAVING ROUND(SUM(ratio_year_spent*salary) + 0.5, 0) > budget
 ORDER BY title
 
 ---------------------------------------------------------------------------------------------------------------------------
+
+https://platform.stratascratch.com/coding/10318-new-products?code_type=1
+
+SELECT company_name, 
+       SUM(CASE WHEN year = 2020 THEN 1 ELSE 0 END) - SUM(CASE WHEN year = 2019 THEN 1 ELSE 0 END) AS net_difference 
+FROM car_launches 
+GROUP BY company_name
+ORDER BY company_name;
+
+---------------------------------------------------------------------------------------------------------------------------
+
+https://platform.stratascratch.com/coding/10322-finding-user-purchases?code_type=1
+
+WITH cte AS (SELECT user_id, 
+                    created_at AS purchase, 
+                    LAG(created_at, 1) OVER(PARTITION BY user_id ORDER BY created_at) AS previous_purchase
+             FROM amazon_transactions)
+
+SELECT DISTINCT user_id
+FROM cte
+WHERE purchase - previous_purchase <= 7;
+
+---------------------------------------------------------------------------------------------------------------------------
