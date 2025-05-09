@@ -754,4 +754,27 @@ SELECT 100.0*(SELECT top_3_clicked FROM cte_2) / (SELECT total_count FROM cte) A
 
 ---------------------------------------------------------------------------------------------------------------------------
 
+https://platform.stratascratch.com/coding/10296-facebook-accounts?code_type=1
 
+SELECT 1.0*SUM(CASE WHEN status = 'closed' THEN 1 ELSE 0 END) / COUNT(*) AS closed_ratio
+FROM fb_account_status 
+WHERE status_date = '2020-01-10';
+
+---------------------------------------------------------------------------------------------------------------------------
+
+https://platform.stratascratch.com/coding/10304-risky-projects?code_type=1
+
+WITH cte AS (SELECT lp.title, lp.budget, 1.0*DATEDIFF(lp.end_date, lp.start_date) / 365 AS ratio_year_spent, le.salary 
+             FROM linkedin_projects AS lp
+             INNER JOIN linkedin_emp_projects AS lep 
+                ON lp.id = lep.project_id
+             INNER JOIN linkedin_employees AS le
+                ON lep.emp_id = le.id)
+                
+SELECT title, budget, ROUND(SUM(ratio_year_spent*salary) + 0.5, 0) AS prorated_employee_expense
+FROM cte
+GROUP BY title, budget
+HAVING ROUND(SUM(ratio_year_spent*salary) + 0.5, 0) > budget
+ORDER BY title
+
+---------------------------------------------------------------------------------------------------------------------------
