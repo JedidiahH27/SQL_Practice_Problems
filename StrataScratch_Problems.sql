@@ -801,3 +801,16 @@ FROM cte
 WHERE purchase - previous_purchase <= 7;
 
 ---------------------------------------------------------------------------------------------------------------------------
+
+https://platform.stratascratch.com/coding/10351-activity-rank?code_type=1
+
+WITH cte AS (SELECT from_user, COUNT(*) AS total_emails
+             FROM google_gmail_emails
+             GROUP BY from_user)
+
+SELECT *, ROW_NUMBER() OVER(ORDER BY total_emails DESC, from_user) 
+FROM cte
+
+---------------------------------------------------------------------------------------------------------------------------
+
+
