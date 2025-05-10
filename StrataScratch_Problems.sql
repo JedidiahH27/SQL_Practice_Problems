@@ -813,4 +813,29 @@ FROM cte
 
 ---------------------------------------------------------------------------------------------------------------------------
 
+https://platform.stratascratch.com/coding/10352-users-by-avg-session-time?code_type=1
+
+WITH cte AS (SELECT user_id, DATE(timestamp), timestamp, action
+             FROM facebook_web_log
+             WHERE action = 'page_load' OR action = 'page_exit'),
+
+cte_2 AS (SELECT user_id, date, MAX(timestamp) AS login 
+          FROM cte
+          WHERE action = 'page_load'
+          GROUP BY user_id, date),
+          
+cte_3 AS (SELECT user_id, date, MIN(timestamp) AS logout 
+          FROM cte
+          WHERE action = 'page_exit'
+          GROUP BY user_id, date)
+          
+SELECT cte_2.user_id, AVG(cte_3.logout - cte_2.login) AS avg_session_duration
+FROM cte_2
+INNER JOIN cte_3
+    ON cte_2.user_id = cte_3.user_id AND cte_2.date = cte_3.date
+    AND cte_2.login < cte_3.logout
+GROUP BY cte_2.user_id;
+
+---------------------------------------------------------------------------------------------------------------------------
+
 
