@@ -838,4 +838,52 @@ GROUP BY cte_2.user_id;
 
 ---------------------------------------------------------------------------------------------------------------------------
 
+HARD
+
+---------------------------------------------------------------------------------------------------------------------------
+
+https://platform.stratascratch.com/coding/514-marketing-campaign-success-advanced?code_type=1
+
+WITH cte AS (SELECT user_id, MIN(created_at)
+             FROM marketing_campaign
+             GROUP BY user_id),
+             
+    cte_2 AS (SELECT user_id, product_id
+              FROM marketing_campaign
+              WHERE (user_id, created_at) IN (SELECT * FROM cte))
+               
+SELECT COUNT(DISTINCT user_id) AS user_count
+FROM marketing_campaign
+WHERE (user_id, created_at) NOT IN (SELECT * FROM cte)
+       AND (user_id, product_id) NOT IN (SELECT * FROM cte_2);
+
+---------------------------------------------------------------------------------------------------------------------------
+
+https://platform.stratascratch.com/coding/2029-the-most-popular-client_id-among-users-using-video-and-voice-calls?code_type=1
+
+WITH cte AS (SELECT user_id, 1.0*SUM(CASE WHEN event_type IN ('video call received', 'video call sent', 'voice call received', 'voice call sent') THEN 1 ELSE 0 END) / 
+                             COUNT(*) AS list_percentage  
+             FROM fact_events
+             GROUP BY user_id),
+
+cte_2 AS (SELECT user_id 
+          FROM cte
+          WHERE list_percentage >= 0.5),
+
+cte_3 AS (SELECT user_id, client_id
+          FROM fact_events
+          WHERE user_id IN (SELECT * FROM cte_2)),
+
+cte_4 AS (SELECT client_id, COUNT(*)
+          FROM cte_3
+          GROUP BY client_id)
+
+SELECT client_id
+FROM cte_4
+ORDER BY count DESC
+LIMIT 1
+
+---------------------------------------------------------------------------------------------------------------------------
+
+
 
