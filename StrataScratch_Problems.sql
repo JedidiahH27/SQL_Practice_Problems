@@ -885,5 +885,50 @@ LIMIT 1
 
 ---------------------------------------------------------------------------------------------------------------------------
 
+https://platform.stratascratch.com/coding/2053-retention-rate?code_type=1
+
+WITH december_2020_and_january_2021_activity AS (SELECT * 
+                                                 FROM sf_events 
+WHERE (EXTRACT(YEAR FROM record_date) = 2020 AND 
+       EXTRACT(MONTH FROM record_date) = 12) OR
+      (EXTRACT(YEAR FROM record_date) = 2021 AND
+       EXTRACT(MONTH FROM record_date) = 1)),
+       
+with_future_activity AS (SELECT dj.record_date AS dj_record_date, 
+                                dj.account_id, 
+                                dj.user_id, 
+                                sf.record_date AS future_activity
+FROM december_2020_and_january_2021_activity as dj
+LEFT JOIN sf_events AS sf 
+    ON DATE_TRUNC('month', sf.record_date) >= (DATE_TRUNC('month', dj.record_date) + INTERVAL '1 month')
+    AND sf.account_id = dj.account_id 
+    AND sf.user_id = dj.user_id),
+    
+count_retained_users AS (SELECT TO_CHAR(dj_record_date, 'YYYY-MM'), account_id, COUNT(DISTINCT user_id) AS retained_users
+FROM with_future_activity
+WHERE future_activity IS NOT NULL
+GROUP BY TO_CHAR(dj_record_date, 'YYYY-MM'), account_id),
+
+count_total_users AS (SELECT TO_CHAR(record_date, 'YYYY-MM'), account_id, COUNT(DISTINCT user_id) AS total_users
+FROM sf_events
+GROUP BY TO_CHAR(record_date, 'YYYY-MM'), account_id),
 
 
+prepped_to_calc_retention AS (SELECT cru.to_char, cru.account_id, 1.0*cru.retained_users / ctu.total_users AS retention
+FROM count_retained_users AS cru
+INNER JOIN count_total_users AS ctu
+    ON cru.to_char = ctu.to_char
+    AND cru.account_id = ctu.account_id),
+    
+penultimate_cte AS (SELECT ptcr.to_char, ptcr.account_id, ptcr.retention, ptcr_1.retention AS jan_retention
+FROM prepped_to_calc_retention AS ptcr
+LEFT JOIN prepped_to_calc_retention AS ptcr_1 
+    ON ptcr.to_char != ptcr_1.to_char
+    AND ptcr.account_id = ptcr_1.account_id)
+    
+SELECT DISTINCT account_id, 
+CASE WHEN jan_retention IS NULL THEN 0 ELSE 1.0*jan_retention / retention END AS retention
+FROM penultimate_cte
+ORDER BY account_id
+
+---------------------------------------------------------------------------------------------------------------------------
