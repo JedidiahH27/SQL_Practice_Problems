@@ -932,3 +932,48 @@ FROM penultimate_cte
 ORDER BY account_id
 
 ---------------------------------------------------------------------------------------------------------------------------
+
+https://platform.stratascratch.com/coding/2089-cookbook-recipes?code_type=1
+
+WITH cte AS (SELECT *, CASE WHEN (page_number % 2 = 0) THEN page_number
+          ELSE page_number - 1 END AS left_page_number 
+FROM cookbook_titles),
+
+cte_1 AS (SELECT left_page_number, title AS right_title
+FROM cte
+WHERE page_number % 2 = 1),
+
+cte_2 AS (SELECT left_page_number, title AS left_title
+FROM cte
+WHERE page_number % 2 = 0),
+
+cte_3 AS (SELECT cte_1.left_page_number, cte_2.left_title, cte_1.right_title
+FROM cte_1
+LEFT JOIN cte_2
+    ON cte_1.left_page_number = cte_2.left_page_number),
+    
+cte_4 AS (SELECT cte_2.left_page_number, cte_2.left_title, cte_1.right_title
+FROM cte_2
+LEFT JOIN cte_1
+    ON cte_1.left_page_number = cte_2.left_page_number),
+    
+cte_5 AS (SELECT cte_3.left_page_number AS lpn_1, cte_3.left_title AS lt_1, cte_3.right_title AS rt_1, cte_4.left_page_number AS lpn_2, cte_4.left_title AS lt_2, cte_4.right_title AS rt_2 
+FROM cte_3
+FULL OUTER JOIN cte_4 ON cte_3.left_page_number = cte_4.left_page_number),
+
+cte_6 AS (SELECT CASE WHEN lpn_1 IS NOT NULL THEN lpn_1
+       ELSE lpn_2 END AS left_page_number,
+       CASE WHEN lt_1 IS NOT NULL THEN lt_1
+        ELSE lt_2 END AS left_title,
+       rt_1 AS right_title
+FROM cte_5
+ORDER BY left_page_number),
+
+cte_7 AS (SELECT GENERATE_SERIES(0, MAX(page_number), 2) AS even_number
+FROM cookbook_titles)
+
+SELECT cte_7.even_number AS left_page_number, cte_6.left_title, cte_6.right_title
+FROM cte_7
+LEFT JOIN cte_6 ON cte_7.even_number = cte_6.left_page_number
+
+---------------------------------------------------------------------------------------------------------------------------
