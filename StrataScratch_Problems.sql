@@ -1011,3 +1011,37 @@ ORDER BY SUM(amen_count) DESC
 LIMIT 1
 
 ---------------------------------------------------------------------------------------------------------------------------
+
+https://platform.stratascratch.com/coding/9814-counting-instances-in-text?code_type=1
+
+WITH bull_count_cte AS (SELECT 
+    filename,
+    COUNT(*) FILTER (WHERE lower(word) = 'bull') AS bull_count
+FROM (
+    SELECT 
+        filename,
+        unnest(regexp_split_to_array(contents, '\s+')) AS word
+    FROM google_file_store
+) AS words
+GROUP BY filename),
+
+bear_count_cte AS (SELECT 
+    filename,
+    COUNT(*) FILTER (WHERE lower(word) = 'bear') AS bear_count
+FROM (
+    SELECT 
+        filename,
+        unnest(regexp_split_to_array(contents, '\s+')) AS word
+    FROM google_file_store
+) AS words
+GROUP BY filename)
+
+SELECT 'bull' AS word, SUM(bull_count)
+FROM bull_count_cte
+UNION
+SELECT 'bear' AS word, SUM(bear_count)
+FROM bear_count_cte
+ORDER BY word DESC;
+
+---------------------------------------------------------------------------------------------------------------------------
+
