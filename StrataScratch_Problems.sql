@@ -977,3 +977,37 @@ FROM cte_7
 LEFT JOIN cte_6 ON cte_7.even_number = cte_6.left_page_number
 
 ---------------------------------------------------------------------------------------------------------------------------
+
+https://platform.stratascratch.com/coding/9632-host-popularity-rental-prices?code_type=1
+
+WITH pop_rating_and_price AS (SELECT CASE WHEN number_of_reviews = 0 THEN 'New'
+                                          WHEN number_of_reviews BETWEEN 1 AND 5  THEN 'Rising'
+                                          WHEN number_of_reviews BETWEEN 6 AND 15 THEN 'Trending Up'
+                                          WHEN number_of_reviews BETWEEN 16 AND 40 THEN 'Popular'
+                                          ELSE 'Hot' END AS host_popularity,
+                                     price    
+                              FROM airbnb_host_searches)
+
+SELECT host_popularity, 
+       MIN(price) AS min_price, 
+       AVG(price) AS avg_price, 
+       MAX(price) AS max_price
+FROM pop_rating_and_price
+GROUP BY host_popularity
+ORDER BY min_price;
+
+---------------------------------------------------------------------------------------------------------------------------
+
+https://platform.stratascratch.com/coding/9633-city-with-most-amenities?code_type=1
+
+WITH city_and_count AS (SELECT city, 
+                               CARDINALITY(STRING_TO_ARRAY(amenities, ',')) AS amen_count
+                        FROM airbnb_search_details)
+
+SELECT city
+FROM city_and_count
+GROUP BY city
+ORDER BY SUM(amen_count) DESC
+LIMIT 1
+
+---------------------------------------------------------------------------------------------------------------------------
