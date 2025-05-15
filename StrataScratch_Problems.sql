@@ -1065,3 +1065,31 @@ ORDER BY n_businesses DESC, state;
 
 ---------------------------------------------------------------------------------------------------------------------------
 
+https://platform.stratascratch.com/coding/10284-popularity-percentage?code_type=1
+
+WITH distinct_user1 AS (SELECT DISTINCT user1
+                        FROM facebook_friends),
+
+     distinct_user2 AS (SELECT DISTINCT user2
+                        FROM facebook_friends),
+
+     all_users AS (SELECT du_1.user1, du_2.user2
+                   FROM distinct_user1 AS du_1
+                   FULL JOIN distinct_user2 AS du_2 ON du_1.user1 = du_2.user2),
+
+     total_count AS (SELECT COUNT(*) AS total_users
+                     FROM all_users),
+                     
+     all_friends AS (SELECT user1
+                     FROM facebook_friends
+                     UNION ALL
+                     SELECT user2 
+                     FROM facebook_friends)
+                     
+SELECT user1, 100.0*COUNT(*) / (SELECT total_users FROM total_count) AS popularity_percent
+FROM all_friends
+GROUP BY user1
+ORDER BY user1;
+
+---------------------------------------------------------------------------------------------------------------------------
+
