@@ -1045,3 +1045,23 @@ ORDER BY word DESC;
 
 ---------------------------------------------------------------------------------------------------------------------------
 
+https://platform.stratascratch.com/coding/10046-top-5-states-with-5-star-businesses?code_type=1
+
+WITH all_states_and_five_stars AS (SELECT state, COUNT(*) AS n_businesses
+                                   FROM yelp_business
+                                   WHERE stars = 5
+                                   GROUP BY state),
+
+top_5_counts AS (SELECT DISTINCT n_businesses 
+                 FROM all_states_and_five_stars
+                 ORDER BY n_businesses DESC
+                 LIMIT 5)
+
+SELECT sf.state, sf.n_businesses 
+FROM all_states_and_five_stars AS sf
+INNER JOIN top_5_counts as tc
+    ON sf.n_businesses = tc.n_businesses
+ORDER BY n_businesses DESC, state;
+
+---------------------------------------------------------------------------------------------------------------------------
+
