@@ -1093,3 +1093,14 @@ ORDER BY user1;
 
 ---------------------------------------------------------------------------------------------------------------------------
 
+https://platform.stratascratch.com/coding/10303-top-percentile-fraud?code_type=1
+
+WITH percentile_cte AS (SELECT *, CUME_DIST() OVER (PARTITION BY state ORDER BY fraud_score) AS percentile
+                        FROM fraud_score)
+
+SELECT policy_num, state, claim_cost, fraud_score
+FROM percentile_cte
+WHERE percentile >= 0.95
+ORDER BY state, fraud_score DESC
+
+---------------------------------------------------------------------------------------------------------------------------
