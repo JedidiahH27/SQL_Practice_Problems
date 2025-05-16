@@ -1104,3 +1104,20 @@ WHERE percentile >= 0.95
 ORDER BY state, fraud_score DESC
 
 ---------------------------------------------------------------------------------------------------------------------------
+
+https://platform.stratascratch.com/coding/10319-monthly-percentage-difference?code_type=1
+
+WITH rev_per_month AS (SELECT TO_CHAR(created_at, 'YYYY-MM') AS year_month,  
+                              SUM(value) AS rev
+                       FROM sf_transactions
+                       GROUP BY TO_CHAR(created_at, 'YYYY-MM')),
+
+prev_rev_per_month AS (SELECT *, LAG(rev, 1) OVER(ORDER BY year_month) AS prev_month_rev
+                       FROM rev_per_month)
+
+SELECT year_month, 
+       100.0*(rev - prev_month_rev) / prev_month_rev AS revenue_diff_pct
+FROM prev_rev_per_month
+ORDER BY year_month;
+
+---------------------------------------------------------------------------------------------------------------------------
