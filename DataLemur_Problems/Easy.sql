@@ -12,7 +12,16 @@ WITH number_of_tweets AS (
 SELECT tweet_bucket, 
        COUNT(*) AS users_num
 FROM number_of_tweets
-GROUP BY tweet_bucket
+GROUP BY tweet_bucket;
 
 --------------------------------------------------------------------------------------------------------------------------------
 
+https://datalemur.com/questions/matching-skills
+
+SELECT candidate_id 
+FROM candidates
+WHERE skill IN ('Python', 'Tableau', 'PostgreSQL')
+GROUP BY candidate_id
+HAVING COUNT(DISTINCT skill) = 3;
+
+--------------------------------------------------------------------------------------------------------------------------------
