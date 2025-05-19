@@ -25,3 +25,15 @@ GROUP BY candidate_id
 HAVING COUNT(DISTINCT skill) = 3;
 
 --------------------------------------------------------------------------------------------------------------------------------
+
+https://datalemur.com/questions/sql-page-with-no-likes
+
+SELECT p.page_id
+FROM pages AS p 
+LEFT JOIN page_likes AS pl 
+  ON p.page_id = pl.page_id
+WHERE pl.user_id IS NULL;
+
+--------------------------------------------------------------------------------------------------------------------------------
+
+
