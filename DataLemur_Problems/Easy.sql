@@ -84,3 +84,21 @@ FROM (SELECT COUNT(*)
 AS duplicates_table
 
 --------------------------------------------------------------------------------------------------------------------------------
+
+https://datalemur.com/questions/completed-trades
+
+WITH count_cities AS 
+  (SELECT u.city 
+   FROM trades AS t
+   INNER JOIN users AS u 
+    ON u.user_id = t.user_id
+    AND t.status = 'Completed')
+  
+SELECT city, COUNT(*) AS total_orders
+FROM count_cities
+GROUP BY city 
+ORDER BY total_orders DESC
+LIMIT 3
+
+--------------------------------------------------------------------------------------------------------------------------------
+
