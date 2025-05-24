@@ -113,4 +113,18 @@ ORDER BY mth, product
 
 --------------------------------------------------------------------------------------------------------------------------------
 
+https://datalemur.com/questions/sql-well-paid-employees
+
+SELECT e.employee_id, e.name AS employee_name
+FROM employee AS e
+INNER JOIN employee AS ee 
+  ON ee.employee_id = e.manager_id
+  AND e.salary > ee.salary
+
+--------------------------------------------------------------------------------------------------------------------------------
+
+https://datalemur.com/questions/click-through-rate
+
+
+
 
