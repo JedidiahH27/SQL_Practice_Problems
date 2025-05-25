@@ -163,3 +163,29 @@ GROUP BY query_number
 ORDER BY query_number 
 
 --------------------------------------------------------------------------------------------------------------------------------
+
+https://datalemur.com/questions/cards-issued-difference
+
+SELECT card_name, MAX(issued_amount) - MIN(issued_amount) AS difference
+FROM monthly_cards_issued
+GROUP BY card_name
+ORDER BY difference DESC
+
+--------------------------------------------------------------------------------------------------------------------------------
+
+https://datalemur.com/questions/alibaba-compressed-mean
+
+WITH orders_per_item AS (
+SELECT item_count*order_occurrences AS orders_to_items
+FROM items_per_order
+),
+
+total_orders AS (
+SELECT SUM(order_occurrences) AS sum_orders
+FROM items_per_order
+)
+
+SELECT ROUND(SUM(orders_to_items)::NUMERIC / (SELECT sum_orders FROM total_orders), 1) AS mean
+FROM orders_per_item;
+
+--------------------------------------------------------------------------------------------------------------------------------
