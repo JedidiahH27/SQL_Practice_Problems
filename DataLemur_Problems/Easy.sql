@@ -135,3 +135,15 @@ GROUP BY app_id
 
 --------------------------------------------------------------------------------------------------------------------------------
 
+https://datalemur.com/questions/second-day-confirmation
+
+SELECT e.user_id
+FROM emails AS e 
+INNER JOIN texts AS t 
+  ON e.email_id = t.email_id
+WHERE t.signup_action = 'Confirmed'
+  AND (t.action_date - e.signup_date) = '1 day'
+
+--------------------------------------------------------------------------------------------------------------------------------
+
+
