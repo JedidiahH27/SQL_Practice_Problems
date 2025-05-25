@@ -147,3 +147,19 @@ WHERE t.signup_action = 'Confirmed'
 --------------------------------------------------------------------------------------------------------------------------------
 
 
+https://datalemur.com/questions/sql-ibm-db2-product-analytics
+
+WITH query_count AS (SELECT COUNT(q.query_id) AS query_number
+                     FROM employees AS e 
+                     LEFT JOIN queries AS q 
+                       ON q.employee_id = e.employee_id
+                       AND q.query_starttime BETWEEN '2023-07-01' AND '2023-10-01'
+                     GROUP BY e.employee_id)
+                     
+SELECT query_number AS unique_queries, 
+       COUNT(*) AS employee_count
+FROM query_count
+GROUP BY query_number
+ORDER BY query_number 
+
+--------------------------------------------------------------------------------------------------------------------------------
