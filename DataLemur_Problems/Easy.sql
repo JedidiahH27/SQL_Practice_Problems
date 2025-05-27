@@ -49,7 +49,7 @@ https://datalemur.com/questions/laptop-mobile-viewership
 SELECT 
 SUM(CASE WHEN device_type = 'laptop' THEN 1 ELSE 0 END) AS laptop_views,
 SUM(CASE WHEN device_type = 'tablet' OR device_type = 'phone' THEN 1 ELSE 0 END) AS mobile_views
-FROM viewership
+FROM viewership;
 
 --------------------------------------------------------------------------------------------------------------------------------
 
@@ -59,7 +59,7 @@ SELECT user_id, EXTRACT(DOY FROM MAX(post_date)) - EXTRACT(DOY FROM MIN(post_dat
 FROM posts
 WHERE EXTRACT(YEAR FROM post_date) = 2021
 GROUP BY user_id
-HAVING EXTRACT(DOY FROM MAX(post_date)) - EXTRACT(DOY FROM MIN(post_date)) > 0
+HAVING EXTRACT(DOY FROM MAX(post_date)) - EXTRACT(DOY FROM MIN(post_date)) > 0;
 
 --------------------------------------------------------------------------------------------------------------------------------
 
@@ -70,7 +70,7 @@ FROM messages
 WHERE TO_CHAR(sent_date, 'YYYY-MM') = '2022-08'
 GROUP BY sender_id
 ORDER BY message_count DESC
-LIMIT 2
+LIMIT 2;
 
 --------------------------------------------------------------------------------------------------------------------------------
 
@@ -81,7 +81,7 @@ FROM (SELECT COUNT(*)
       FROM job_listings
       GROUP BY company_id, title, description
       HAVING COUNT(*) > 1) 
-AS duplicates_table
+AS duplicates_table;
 
 --------------------------------------------------------------------------------------------------------------------------------
 
@@ -98,7 +98,7 @@ SELECT city, COUNT(*) AS total_orders
 FROM count_cities
 GROUP BY city 
 ORDER BY total_orders DESC
-LIMIT 3
+LIMIT 3;
 
 --------------------------------------------------------------------------------------------------------------------------------
 
@@ -109,7 +109,7 @@ SELECT EXTRACT(MONTH FROM submit_date) AS mth,
        ROUND(AVG(stars), 2) AS avg_stars
 FROM reviews
 GROUP BY product_id, EXTRACT(MONTH FROM submit_date)
-ORDER BY mth, product
+ORDER BY mth, product;
 
 --------------------------------------------------------------------------------------------------------------------------------
 
@@ -119,7 +119,7 @@ SELECT e.employee_id, e.name AS employee_name
 FROM employee AS e
 INNER JOIN employee AS ee 
   ON ee.employee_id = e.manager_id
-  AND e.salary > ee.salary
+  AND e.salary > ee.salary;
 
 --------------------------------------------------------------------------------------------------------------------------------
 
@@ -131,7 +131,7 @@ SELECT app_id,
        AS ctr
 FROM events
 WHERE EXTRACT(YEAR FROM timestamp) = 2022
-GROUP BY app_id
+GROUP BY app_id;
 
 --------------------------------------------------------------------------------------------------------------------------------
 
@@ -142,7 +142,7 @@ FROM emails AS e
 INNER JOIN texts AS t 
   ON e.email_id = t.email_id
 WHERE t.signup_action = 'Confirmed'
-  AND (t.action_date - e.signup_date) = '1 day'
+  AND (t.action_date - e.signup_date) = '1 day';
 
 --------------------------------------------------------------------------------------------------------------------------------
 
@@ -160,7 +160,7 @@ SELECT query_number AS unique_queries,
        COUNT(*) AS employee_count
 FROM query_count
 GROUP BY query_number
-ORDER BY query_number 
+ORDER BY query_number; 
 
 --------------------------------------------------------------------------------------------------------------------------------
 
@@ -169,7 +169,7 @@ https://datalemur.com/questions/cards-issued-difference
 SELECT card_name, MAX(issued_amount) - MIN(issued_amount) AS difference
 FROM monthly_cards_issued
 GROUP BY card_name
-ORDER BY difference DESC
+ORDER BY difference DESC;
 
 --------------------------------------------------------------------------------------------------------------------------------
 
@@ -196,7 +196,18 @@ SELECT drug, SUM(total_sales - cogs) AS total_profit
 FROM pharmacy_sales
 GROUP BY drug
 ORDER BY total_profit DESC
-LIMIT 3
+LIMIT 3;
 
 --------------------------------------------------------------------------------------------------------------------------------
 
+https://datalemur.com/questions/non-profitable-drugs
+
+SELECT manufacturer, 
+       COUNT(DISTINCT drug) AS drug_count,
+       ABS(SUM(total_sales - cogs)) AS total_loss 
+FROM pharmacy_sales
+WHERE (total_sales - cogs) < 0
+GROUP BY manufacturer
+ORDER BY total_loss DESC;
+
+--------------------------------------------------------------------------------------------------------------------------------
