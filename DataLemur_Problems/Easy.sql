@@ -189,3 +189,14 @@ SELECT ROUND(SUM(orders_to_items)::NUMERIC / (SELECT sum_orders FROM total_order
 FROM orders_per_item;
 
 --------------------------------------------------------------------------------------------------------------------------------
+
+https://datalemur.com/questions/top-profitable-drugs
+
+SELECT drug, SUM(total_sales - cogs) AS total_profit
+FROM pharmacy_sales
+GROUP BY drug
+ORDER BY total_profit DESC
+LIMIT 3
+
+--------------------------------------------------------------------------------------------------------------------------------
+
