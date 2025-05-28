@@ -218,10 +218,20 @@ SELECT manufacturer,
        '$' || TO_CHAR(ROUND(SUM(total_sales) / 1000000), 'FM999') || ' million' AS sale
 FROM pharmacy_sales
 GROUP BY manufacturer
-ORDER BY SUM(total_sales) DESC
+ORDER BY SUM(total_sales) DESC;
 
 --------------------------------------------------------------------------------------------------------------------------------
 
 https://datalemur.com/questions/frequent-callers
 
+WITH three_or_more AS (
+  SELECT policy_holder_id
+  FROM callers
+  GROUP BY policy_holder_id
+  HAVING COUNT(DISTINCT case_id) >= 3
+)
 
+SELECT COUNT(*) AS policy_holder_count
+FROM three_or_more;
+
+--------------------------------------------------------------------------------------------------------------------------------
