@@ -211,3 +211,17 @@ GROUP BY manufacturer
 ORDER BY total_loss DESC;
 
 --------------------------------------------------------------------------------------------------------------------------------
+
+https://datalemur.com/questions/total-drugs-sales
+
+SELECT manufacturer, 
+       '$' || TO_CHAR(ROUND(SUM(total_sales) / 1000000), 'FM999') || ' million' AS sale
+FROM pharmacy_sales
+GROUP BY manufacturer
+ORDER BY SUM(total_sales) DESC
+
+--------------------------------------------------------------------------------------------------------------------------------
+
+https://datalemur.com/questions/frequent-callers
+
+
